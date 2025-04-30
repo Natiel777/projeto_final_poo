@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from datetime import datetime as date
-from disciplina import Disciplina
 
 class Pessoa(ABC):
     def __init__(self, nome: str, cpf: str, data_nascimento: date):
@@ -8,13 +7,19 @@ class Pessoa(ABC):
         self.__cpf = cpf
         self.data_nascimento = data_nascimento
 
+    @property
+    def cpf(self):
+        return self.__cpf
+
+    @cpf.setter
+    def cpf(self, cpf):
+        self.__cpf = cpf
+
     @abstractmethod
     def exibir_dados(self):
         pass
 
-    def get_cpf(self):
-        return self.__cpf
-        
+
 class Aluno(Pessoa):
     def __init__(self, nome, cpf, data_nascimento, matricula):
         super().__init__(nome, cpf, data_nascimento)
@@ -22,27 +27,53 @@ class Aluno(Pessoa):
         self.__notas = []
         self.disciplinas = []
 
+    @property
+    def matricula(self):
+        return self.__matricula
+
+    @matricula.setter
+    def matricula(self, matricula):
+        self.__matricula = matricula
+
+    @property
+    def notas(self):
+        return self.__notas
+
+    @notas.setter
+    def notas(self, notas):
+        self.__notas = notas
+
     def adicionar_nota(self, nota):
         self.__notas.append(nota)
 
     def exibir_dados(self):
-        print(f"Aluno: {self.nome}, Nascimento: {self.data_nascimento}")
+        print(f"Aluno: {self.nome}, Nascimento: {self.data_nascimento}, Matrícula: {self.__matricula}")
         print("Disciplinas matriculadas:")
         for d in self.disciplinas:
             print(f"  - {d.nome} ({d.codigo})")
-            
+
+
 class Professor(Pessoa):
     def __init__(self, nome, cpf, data_nascimento, siape):
         super().__init__(nome, cpf, data_nascimento)
         self.__siape = siape
         self.disciplinas = []
 
+    @property
+    def siape(self):
+        return self.__siape
+
+    @siape.setter
+    def siape(self, siape):
+        self.__siape = siape
+
     def exibir_dados(self):
-        print(f"Professor: {self.nome}, Nascimento: {self.data_nascimento}")
+        print(f"Professor: {self.nome}, Nascimento: {self.data_nascimento}, SIAPE: {self.__siape}")
         print("Disciplinas lecionadas:")
         for d in self.disciplinas:
             print(f"  - {d.nome} ({d.codigo})")
-            
+
+
 class Disciplina:
     def __init__(self, codigo, nome, professor_responsavel):
         self.codigo = codigo
@@ -63,3 +94,4 @@ class Disciplina:
 
     def atribuir_ao_professor(self):
         self.professor_responsavel.disciplinas.append(self)
+
