@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-from datetime import datetime as dt
+from datetime import datetime as date
 from disciplina import Disciplina
 
 class Pessoa(ABC):
-	def __init__(self, nome: str, cpf: str, data_nascimento: date):
-         self.nome = nome
-         self.__cpf = cpf
-         self.data_nascimento = data_nascimento
+    def __init__(self, nome: str, cpf: str, data_nascimento: date):
+        self.nome = nome
+        self.__cpf = cpf
+        self.data_nascimento = data_nascimento
 
     @abstractmethod
     def exibir_dados(self):
@@ -16,7 +16,7 @@ class Pessoa(ABC):
         return self.__cpf
         
 class Aluno(Pessoa):
-	def __init__(self, nome, cpf, data_nascimento, matricula):
+    def __init__(self, nome, cpf, data_nascimento, matricula):
         super().__init__(nome, cpf, data_nascimento)
         self.__matricula = matricula
         self.__notas = []
