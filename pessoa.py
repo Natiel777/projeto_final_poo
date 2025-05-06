@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime as date
+from disciplina import Disciplina
 
 class Pessoa(ABC):
-    def __init__(self, nome: str, cpf: str, data_nascimento: date):
+    def __init__(self, nome, cpf, data_nascimento=date(1900, 1, 1)):
         self.nome = nome
         self.__cpf = cpf
         self.data_nascimento = data_nascimento
@@ -18,7 +19,6 @@ class Pessoa(ABC):
     @abstractmethod
     def exibir_dados(self):
         pass
-
 
 class Aluno(Pessoa):
     def __init__(self, nome, cpf, data_nascimento, matricula):
@@ -47,10 +47,14 @@ class Aluno(Pessoa):
         self.__notas.append(nota)
 
     def exibir_dados(self):
-        print(f"Aluno: {self.nome}, Nascimento: {self.data_nascimento}, Matrícula: {self.__matricula}")
-        print("Disciplinas matriculadas:")
-        for d in self.disciplinas:
-            print(f"  - {d.nome} ({d.codigo})")
+        print(f"Nome: {self.nome}")
+        print(f"CPF: {self.cpf}")
+        print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
+        print(f"Matrícula: {self.__matricula}")
+        print(f"Notas: {self.__notas}")
+        print("Disciplinas:")
+        for disciplina in self.disciplinas:
+            print(f"- {disciplina.nome}") 
 
 
 class Professor(Pessoa):
@@ -67,11 +71,14 @@ class Professor(Pessoa):
     def siape(self, siape):
         self.__siape = siape
 
-    def exibir_dados(self):
-        print(f"Professor: {self.nome}, Nascimento: {self.data_nascimento}, SIAPE: {self.__siape}")
+    def exibir_dados(self):  
+        print(f"Nome do Professor: {self.nome}")
+        print(f"CPF: {self.cpf}")
+        print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
+        print(f"SIAPE: {self.__siape}")
         print("Disciplinas lecionadas:")
-        for d in self.disciplinas:
-            print(f"  - {d.nome} ({d.codigo})")
+        for disciplina in self.disciplinas:
+            print(f"- {disciplina.nome} ({disciplina.codigo})")
 
 
 class Disciplina:
@@ -94,4 +101,3 @@ class Disciplina:
 
     def atribuir_ao_professor(self):
         self.professor_responsavel.disciplinas.append(self)
-
