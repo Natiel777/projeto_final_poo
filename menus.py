@@ -1,3 +1,10 @@
+from pessoa import Pessoa
+from cadastro import Cadastro
+from disciplina import Disciplina
+from relatorio import Relatorio
+from persistencia import Persistencia
+from datetime import date
+
 def menu_principal():
     while True:
         print("\n--- Menu Principal ---")
