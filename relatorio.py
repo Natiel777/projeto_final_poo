@@ -1,5 +1,7 @@
 from pessoa import Professor, Aluno, Disciplina
-from datetime import datetime
+from disciplina import Disciplina
+from persistencia import Persistencia
+from datetime import date, datetime
 
 professores = []
 alunos = []
@@ -23,7 +25,7 @@ try:
             except Exception as e:
                 print(f"Erro ao processar linha de professor: {e}")
 except FileNotFoundError:
-    print("Arquivo 'professores.txt' não encontrado.")
+    print('Arquivo "professores.txt" não encontrado.')
 
 try:
     with open("alunos.txt", "r", encoding="utf-8") as arquivo:
@@ -46,7 +48,7 @@ try:
             except Exception as e:
                 print(f"Erro ao processar linha de aluno: {e}")
 except FileNotFoundError:
-    print("Arquivo 'alunos.txt' não encontrado.")
+    print('Arquivo "alunos.txt" não encontrado.')
 
 try:
     with open("disciplinas.txt", "r", encoding="utf-8") as arquivo:
@@ -83,14 +85,14 @@ for disc in disciplinas:
                 disc.matricular_aluno(aluno)
                 break
 
-print("\n- PROFESSORES -")
+print("\n--- Professores ---")
 for professor in professores:
     professor.exibir_dados()
 
-print("\n- ALUNOS -")
+print("\n--- Alunos ---")
 for aluno in alunos:
     aluno.exibir_dados()
 
-print("\n- DISCIPLINAS -")
+print("\n--- Disciplinas ---")
 for disc in disciplinas:
     disc.exibir_informacoes()
