@@ -26,11 +26,15 @@ class Pessoa(ABC):
             return len(str(int(cpf))) == 11
         except ValueError:
             return False
+      
+    @staticmethod
+    def formatar_cpf(cpf):
+        cpf = str(cpf).zfill(11)
+           return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"  
 
     @staticmethod
     def validar_data(data_nascimento):
         return data_nascimento <= date.now().date()
-
 
 class Aluno(Pessoa):
     total_alunos = 0 
@@ -86,15 +90,15 @@ class Aluno(Pessoa):
         else:
             print(f"Disciplina com código {codigo_disciplina} não encontrada.")
             
-    def exibir_dados(self):
-        print(f"Nome: {self.nome}")
-        print(f"CPF: {self.cpf}")
-        print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
-        print(f"Matrícula: {self.__matricula}")
-        print(f"Notas: {self.__notas}")
-        print("Disciplinas:")
-        for disciplina in self.disciplinas:
-            print(f"- {disciplina.nome}")
+   def exibir_dados(self):
+    print(f"Nome: {self.nome}")
+    print(f"CPF: {Pessoa.formatar_cpf(self.cpf)}")
+    print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
+    print(f"Matrícula: {self.__matricula}")
+    print(f"Notas: {self.__notas}")
+    print("Disciplinas:")
+    for disciplina in self.disciplinas:
+        print(f"- {disciplina.nome}")
 
 class Professor(Pessoa):
     total_professores = 0
@@ -127,10 +131,10 @@ class Professor(Pessoa):
             print(f"Disciplina com código {codigo_disciplina} não encontrada.")
     
     def exibir_dados(self):  
-        print(f"Nome do Professor: {self.nome}")
-        print(f"CPF: {self.cpf}")
-        print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
-        print(f"SIAPE: {self.__siape}")
-        print("Disciplinas lecionadas:")
-        for disciplina in self.disciplinas:
-            print(f"- {disciplina.nome} ({disciplina.codigo})")
+    print(f"Nome do Professor: {self.nome}")
+    print(f"CPF: {Pessoa.formatar_cpf(self.cpf)}")
+    print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
+    print(f"SIAPE: {self.__siape}")
+    print("Disciplinas lecionadas:")
+    for disciplina in self.disciplinas:
+        print(f"- {disciplina.nome} ({disciplina.codigo})")
