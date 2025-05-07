@@ -22,8 +22,10 @@ class Pessoa(ABC):
         
     @staticmethod
     def validar_cpf(cpf):
-        cpf_obj = cpf()
-        return cpf_obj.validate(cpf)
+        try:
+            return len(str(int(cpf))) == 11
+        except ValueError:
+            return False
       
     @staticmethod
     def formatar_cpf(cpf):
