@@ -1,6 +1,17 @@
+from typing import List
+from datetime import datetime
+
+class Professor:
+    def __init__(self, nome, cpf, data_nascimento, siape):
+        self.nome = nome
+        self.cpf = cpf
+        self.data_nascimento = data_nascimento
+        self.siape = siape
+        self.disciplinas_temporarias = []
+
 professores: List[Professor] = []
-with open("caminho do arquivo"), "r", enconding="utf-8") as arquivo
-    for linha arquivo:
+with open("caminho do arquivo", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
         linha = linha.strip()
         if linha:
             dados = linha.split("|")
@@ -13,4 +24,5 @@ with open("caminho do arquivo"), "r", enconding="utf-8") as arquivo
             professor.disciplinas_temporarias = disciplinas_alocadas
             professores.append(professor)
 
-for profesor in professores:                                              
+for professor in professores:
+    pass
