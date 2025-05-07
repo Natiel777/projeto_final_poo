@@ -13,11 +13,11 @@ class Disciplina:
             print(f"  - {aluno.nome}")
 
     def adicionar_aluno(self, aluno):
-    if aluno not in self.alunos_matriculados:
-        self.alunos_matriculados.append(aluno)
-    if self not in aluno.disciplinas:
-        aluno.disciplinas.append(self)
+        if aluno not in self.alunos_matriculados:
+            self.alunos_matriculados.append(aluno)
+        if self not in aluno.disciplinas:
+            aluno.disciplinas.append(self)
 
     def atribuir_ao_professor(self):
-    if self not in self.professor_responsavel.disciplinas:
-        self.professor_responsavel.disciplinas.append(self)
+        if self not in self.professor_responsavel.disciplinas:
+           self.professor_responsavel.disciplinas.append(self)
