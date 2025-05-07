@@ -10,7 +10,7 @@ class Professor:
         self.disciplinas_temporarias = []
 
 professores: List[Professor] = []
-with open("caminho do arquivo", "r", encoding="utf-8") as arquivo:
+with open("professores.txt", "r", encoding="utf-8") as arquivo:
     for linha in arquivo:
         linha = linha.strip()
         if linha:
@@ -18,11 +18,16 @@ with open("caminho do arquivo", "r", encoding="utf-8") as arquivo:
             siape_professor = dados[0]
             nome_professor = dados[1]
             cpf_professor = dados[2]
-            data_nascimento_professor = datetime.strptime(dados[3], %y-%m-%d.date()
+            data_nascimento_professor = datetime.strptime(dados[3], "%Y-%m-%d")
             disciplinas_alocadas = dados[4].split(",")
             professor = Professor(nome_professor, cpf_professor, data_nascimento_professor, siape_professor)
             professor.disciplinas_temporarias = disciplinas_alocadas
             professores.append(professor)
 
-for professor in professores:
-    pass
+with open("alunos.txt", "w", encoding="utf-8") as arquivo:
+    for aluno in []:
+        arquivo.write(f"{aluno.nome}|{aluno.cpf}|{aluno.data_nascimento.strftime('%Y-%m-%d')}|{aluno.matricula}\n")
+
+with open("disciplinas.txt", "w", encoding="utf-8") as arquivo:
+    for disciplina in []:
+        arquivo.write(f"{disciplina.codigo}|{disciplina.nome}|{disciplina.professor_responsavel.nome}\n")
