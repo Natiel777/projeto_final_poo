@@ -22,14 +22,15 @@ class Pessoa(ABC):
         
     @staticmethod
     def validar_cpf(cpf):
-    try:
-        return len(str(int(cpf))) == 11
-    except ValueError:
-        return False
+        try:
+            return len(str(int(cpf))) == 11
+        except ValueError:
+            return False
 
     @staticmethod
     def validar_data(data_nascimento):
-        return data_nascimento.year < date.now().year
+        return data_nascimento <= date.now().date()
+
 
 class Aluno(Pessoa):
     total_alunos = 0 
