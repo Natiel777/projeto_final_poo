@@ -1,4 +1,4 @@
-class CadastroAcademico:
+class Cadastro:
     def __init__(self):
         self.alunos = []
         self.professores = []
