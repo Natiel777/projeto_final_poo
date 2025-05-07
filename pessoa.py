@@ -97,8 +97,8 @@ class Aluno(Pessoa):
         print(f"Matrícula: {self.__matricula}")
         print(f"Notas: {self.__notas}")
         print("Disciplinas:")
-        for disciplina in self.disciplinas:
-                print(f"- {disciplina.nome}")
+    for disciplina in self.disciplinas:
+        print(f"- {disciplina.nome}")
 
 class Professor(Pessoa):
     total_professores = 0
@@ -135,6 +135,6 @@ class Professor(Pessoa):
         print(f"CPF: {Pessoa.formatar_cpf(self.cpf)}")
         print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
         print(f"SIAPE: {self.__siape}")
-        print("Disciplinas lecionadas:")
-        for disciplina in self.disciplinas:
-            print(f"- {disciplina.nome} ({disciplina.codigo})")
+    print("Disciplinas lecionadas:")
+    for disciplina in self.disciplinas:
+        print(f"- {disciplina.nome} ({disciplina.codigo})")
