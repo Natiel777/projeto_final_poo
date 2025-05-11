@@ -1,3 +1,4 @@
+# Gera relatórios diversos sobre alunos, professores e disciplinas
 class Relatorio:
 
     @staticmethod
