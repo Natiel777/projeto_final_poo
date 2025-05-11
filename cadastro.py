@@ -1,12 +1,15 @@
+from pessoa import Pessoa
+from disciplina import Disciplina
 from persistencia import Persistencia
 
+# Classe responsável por cadastrar e buscar entidades
 class Cadastro:
     def __init__(self):
         self.alunos = Persistencia.carregar_alunos()
         self.professores = Persistencia.carregar_professores()
         self.disciplinas = Persistencia.carregar_disciplinas(
             professores=self.professores)  
-            
+
     def cadastrar_aluno(self, aluno):
         try:
             Pessoa.validar_cpf(aluno.cpf)
@@ -32,6 +35,7 @@ class Cadastro:
         Persistencia.salvar_disciplinas(self.disciplinas)
         print(f"Disciplina {disciplina.nome} cadastrada!")
 
+    # Lista todos os registros de uma entidade
     def listar_todos(self, lista_entidades):
         if not lista_entidades:
             print("Nenhum registro encontrado.")
