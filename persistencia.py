@@ -2,8 +2,9 @@ from datetime import datetime, date
 from pessoa import Aluno, Professor
 from disciplina import Disciplina
 
+# Responsável por salvar e carregar dados dos arquivos
 class Persistencia:
-    
+
     @staticmethod
     def carregar_alunos(nome_arquivo="alunos.txt"):
         alunos = []
