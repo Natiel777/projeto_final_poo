@@ -1,98 +1,63 @@
-from pessoa import Professor, Aluno, Disciplina
-from disciplina import Disciplina
-from persistencia import Persistencia
-from datetime import date, datetime
+class Relatorio:
 
-professores = []
-alunos = []
-disciplinas = []
+    @staticmethod
+    def alunos_aprovados(alunos):
+        print("\n--- Alunos Aprovados (média >= 7) ---")
+        for aluno in alunos:  
+            for disciplina, notas in aluno.notas.items():
+                if notas:
+                    media = sum(notas) / len(notas)
+                    if media >= 7:
+                        aluno.exibir_dados()
+                        print(f"Média em {disciplina.nome}: {media:.2f}")
+                else:
+                    print(f"Aluno {aluno.nome} não possui notas em {disciplina.nome}")
 
-professores_dict = {}
-alunos_dict = {}
-
-try:
-    with open("professores.txt", "r", encoding="utf-8") as arquivo:
-        for linha in arquivo:
-            try:
-                linha = linha.strip()
-                if linha:
-                    siape, nome, cpf, data_str, disci_str = linha.split("|")
-                    data_nasc = datetime.strptime(data_str, "%Y-%m-%d").date()
-                    professor = Professor(nome, cpf, data_nasc, siape)
-                    professor.disciplinas_temporarias = disci_str.split(",") if disci_str else []
-                    professores.append(professor)
-                    professores_dict[nome] = professor
-            except Exception as e:
-                print(f"Erro ao processar linha de professor: {e}")
-except FileNotFoundError:
-    print('Arquivo "professores.txt" não encontrado.')
-
-try:
-    with open("alunos.txt", "r", encoding="utf-8") as arquivo:
-        for linha in arquivo:
-            try:
-                linha = linha.strip()
-                if linha:
-                    partes = linha.split("|")
-                    nome, cpf, data_str, matricula = partes[:4]
-                    data_nasc = datetime.strptime(data_str, "%Y-%m-%d").date()
-                    aluno = Aluno(nome, cpf, data_nasc, matricula)
-                    aluno.disciplinas_temporarias = []  
-                    for info in partes[4:]:
-                        campos = info.split(",")
-                        disc_nome = campos[0]
-                        notas = list(map(float, campos[1:]))
-                        aluno.disciplinas_temporarias.append((disc_nome, notas))
-                    alunos.append(aluno)
-                    alunos_dict[nome] = aluno
-            except Exception as e:
-                print(f"Erro ao processar linha de aluno: {e}")
-except FileNotFoundError:
-    print('Arquivo "alunos.txt" não encontrado.')
-
-try:
-    with open("disciplinas.txt", "r", encoding="utf-8") as arquivo:
-        for linha in arquivo:
-            try:
-                linha = linha.strip()
-                if linha:
-                    codigo, nome_disc, prof_nome, alunos_str = linha.split("|")
-                    if prof_nome in professores_dict:
-                        prof = professores_dict[prof_nome]
-                        disc = Disciplina(codigo, nome_disc, prof)
-                        disc.alunos_temporarios = alunos_str.split(",") if alunos_str else []
-                        disciplinas.append(disc)
-                    else:
-                        raise ValueError(f"Professor '{prof_nome}' não encontrado.")
-            except Exception as e:
-                print(f"Erro ao processar linha de disciplina: {e}")
-except FileNotFoundError:
-    print("Arquivo 'disciplinas.txt' não encontrado.")
-
-for aluno in alunos:
-    for nome_disc, notas in aluno.disciplinas_temporarias:
-        for disc in disciplinas:
-            if disc.nome == nome_disc:
-                disc.matricular_aluno(aluno)
-                for n in notas:
-                    aluno.adicionar_nota(n)
-                break
-
-for disc in disciplinas:
-    for nome_al in disc.alunos_temporarios:
+    @staticmethod
+    def alunos_reprovados(alunos):
+        print("\n--- Alunos Reprovados (média < 7) ---")
         for aluno in alunos:
-            if aluno.nome == nome_al:
-                disc.matricular_aluno(aluno)
-                break
+            for disciplina, notas in aluno.notas.items():
+                if notas:
+                    media = sum(notas) / len(notas)
+                    if media < 7:
+                        aluno.exibir_dados()
+                        print(f"Média em {disciplina.nome}: {media:.2f}")
+                else:
+                    print(f"Aluno {aluno.nome} não possui notas em {disciplina.nome}")
 
-print("\n--- Professores ---")
-for professor in professores:
-    professor.exibir_dados()
+    @staticmethod
+    def professores_com_mais_alunos(disciplinas, limite):
+        print(f"\n--- Professores com mais de {limite} alunos ---")
+        professores_alunos = {}
+        for disciplina in disciplinas:
+            if disciplina.professor_responsavel:
+                nome_professor = disciplina.professor_responsavel.nome
+                num_alunos = len(disciplina.alunos_matriculados)
+                professores_alunos[nome_professor] = professores_alunos.get(
+                    nome_professor, 0) + num_alunos
 
-print("\n--- Alunos ---")
-for aluno in alunos:
-    aluno.exibir_dados()
+        for professor, num_alunos in professores_alunos.items():
+            if num_alunos > limite:
+                print(f"{professor}: {num_alunos} alunos")
 
-print("\n--- Disciplinas ---")
-for disc in disciplinas:
-    disc.exibir_informacoes()
+    @staticmethod
+    def estatisticas_gerais(alunos, professores, disciplinas):
+        print("\n--- Estatísticas Gerais ---")
+        print(f"Total de alunos: {len(alunos)}")
+        print(f"Total de professores: {len(professores)}")
+        print(f"Total de disciplinas: {len(disciplinas)}")
+
+        total_notas = 0
+        total_disciplinas_com_notas = 0
+        for aluno in alunos:
+            for disciplina, notas in aluno.notas.items():
+                if notas:
+                    total_notas += sum(notas) / len(notas)
+                    total_disciplinas_com_notas += 1
+
+        if total_disciplinas_com_notas > 0:
+            media_geral = total_notas / total_disciplinas_com_notas
+            print(f"Média geral de notas por disciplina: {media_geral:.2f}")
+        else:
+            print("Nenhuma nota registrada.")
