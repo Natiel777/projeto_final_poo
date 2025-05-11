@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from disciplina import Disciplina
 from datetime import datetime, date
 
+# Classe abstrata base para Aluno e Professor
 class Pessoa(ABC):
     def __init__(self, nome, cpf, data_nascimento=date(1900, 1, 1)):
         self.nome = nome
@@ -47,6 +48,7 @@ class Pessoa(ABC):
         else:
             raise TypeError("Tipo de data inválido")
 
+# Representa um aluno com matrícula e notas
 class Aluno(Pessoa):
     total_alunos = 0
 
@@ -115,6 +117,7 @@ class Aluno(Pessoa):
     def exibir_total_cadastrados():
         print(f"Total de alunos cadastrados: {Aluno.total_alunos}")
 
+# Representa um professor com SIAPE e disciplinas
 class Professor(Pessoa):
     total_professores = 0
 
