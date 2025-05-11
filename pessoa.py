@@ -1,7 +1,7 @@
+import re  
 from abc import ABC, abstractmethod
 from disciplina import Disciplina
-from persistencia import Persistencia
-from datetime import datetime as date
+from datetime import datetime, date
 
 class Pessoa(ABC):
     def __init__(self, nome, cpf, data_nascimento=date(1900, 1, 1)):
@@ -15,36 +15,46 @@ class Pessoa(ABC):
 
     @cpf.setter
     def cpf(self, cpf):
+        if not Pessoa.validar_cpf(cpf):
+            raise ValueError("CPF inválido")
         self.__cpf = cpf
 
     @abstractmethod
     def exibir_dados(self):
         pass
-        
+
     @staticmethod
     def validar_cpf(cpf):
-        try:
-            return len(str(int(cpf))) == 11
-        except ValueError:
-            return False
-      
+        cpf = re.sub(r'\D', '', str(cpf))
+        return len(cpf) == 11
+
     @staticmethod
     def formatar_cpf(cpf):
         cpf = str(cpf).zfill(11)
-        return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"  
+        return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
 
     @staticmethod
     def validar_data(data_nascimento):
-        return data_nascimento <= date.now().date()
+        if isinstance(data_nascimento, date):
+            return data_nascimento <= date.today()
+        elif isinstance(data_nascimento, str):
+            try:
+                data_nascimento = datetime.strptime(
+                    data_nascimento, "%Y-%m-%d").date()
+                return data_nascimento <= date.today()
+            except ValueError:
+                raise ValueError("Formato de data inválido (AAAA-MM-DD)")
+        else:
+            raise TypeError("Tipo de data inválido")
 
 class Aluno(Pessoa):
-    total_alunos = 0 
-    
+    total_alunos = 0
+
     def __init__(self, nome, cpf, data_nascimento, matricula):
         super().__init__(nome, cpf, data_nascimento)
         self.__matricula = matricula
-        self.__notas = []
-        self.disciplina = []
+        self.__notas = {}  
+        self.disciplinas = []
         Aluno.total_alunos += 1
 
     @property
@@ -64,46 +74,50 @@ class Aluno(Pessoa):
         self.__notas = notas
 
     def adicionar_nota(self, disciplina, nota):
-        if disciplina in self.disciplina:
-            self.__notas.append(nota)
+        if disciplina in self.__notas:
+            self.__notas[disciplina].append(nota)
         else:
-            print("Aluno não está matriculado nesta disciplina.")
+            self.__notas[disciplina] = [nota]
 
     def calcular_media(self, disciplina):
-        if disciplina in self.disciplina:
-            if len(self.__notas) == 0:
+        if disciplina in self.__notas:
+            notas = self.__notas[disciplina]
+            if notas:
+                return sum(notas) / len(notas)
+            else:
                 return 0
-            return sum(self.__notas) / len(self.__notas)
         else:
-            print("Aluno não está matriculado nesta disciplina.")
             return 0
 
     def matricular_em_disciplina(self, disciplina):
-        self.disciplinas.append(disciplina)
-        disciplina.adicionar_aluno(self)
+        if disciplina not in self.disciplinas:
+            self.disciplinas.append(disciplina)
+            disciplina.adicionar_aluno(self)
 
-    def desmatricular_disciplina(self, codigo_disciplina):
-        for disciplina in self.disciplina:
-            if disciplina.codigo == codigo_disciplina:
-                self.disciplinas.remove(disciplina)
-                disciplina.alunos_matriculados.remove(self)
-                break
-        else:
-            print(f"Disciplina com código {codigo_disciplina} não encontrada.")
-            
+    def desmatricular_disciplina(self, disciplina):
+        if disciplina in self.disciplinas:
+            self.disciplinas.remove(disciplina)
+            disciplina.remover_aluno(self)
+
     def exibir_dados(self):
         print(f"Nome: {self.nome}")
         print(f"CPF: {Pessoa.formatar_cpf(self.cpf)}")
         print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
         print(f"Matrícula: {self.__matricula}")
-        print(f"Notas: {self.__notas}")
-    print("Disciplinas:")
-    for disciplina in self.disciplina:
-        print(f"- {disciplina.nome}")
+        print("Disciplinas:")
+        for disciplina in self.disciplinas:
+            print(f"- {disciplina.nome}")
+        print("Notas:")
+        for disciplina, notas in self.__notas.items():
+            print(f"  - {disciplina.nome}: {notas}")
+
+    @staticmethod
+    def exibir_total_cadastrados():
+        print(f"Total de alunos cadastrados: {Aluno.total_alunos}")
 
 class Professor(Pessoa):
     total_professores = 0
-    
+
     def __init__(self, nome, cpf, data_nascimento, siape):
         super().__init__(nome, cpf, data_nascimento)
         self.__siape = siape
@@ -119,23 +133,24 @@ class Professor(Pessoa):
         self.__siape = siape
 
     def adicionar_disciplina(self, disciplina):
-        self.disciplinas.append(disciplina)
-        disciplina.professor_responsavel = self
+        if disciplina not in self.disciplinas:
+            self.disciplinas.append(disciplina)
+            disciplina.professor_responsavel = self
 
-    def remover_disciplina(self, codigo_disciplina):
-        for disciplina in self.disciplina:
-            if disciplina.codigo == codigo_disciplina:
-                self.disciplina.remove(disciplina)
-                disciplina.professor_responsavel = None
-                break
-        else:
-            print(f"Disciplina com código {codigo_disciplina} não encontrada.")
-    
-    def exibir_dados(self):  
+    def remover_disciplina(self, disciplina):
+        if disciplina in self.disciplinas:
+            self.disciplinas.remove(disciplina)
+            disciplina.professor_responsavel = None
+
+    def exibir_dados(self):
         print(f"Nome do Professor: {self.nome}")
         print(f"CPF: {Pessoa.formatar_cpf(self.cpf)}")
         print(f"Data de Nascimento: {self.data_nascimento.strftime('%d/%m/%Y')}")
         print(f"SIAPE: {self.__siape}")
-    print("Disciplinas lecionadas:")
-    for disciplina in self.disciplina:
-        print(f"- {disciplina.nome} ({disciplina.codigo})")
+        print("Disciplinas lecionadas:")
+        for disciplina in self.disciplinas:
+            print(f"- {disciplina.nome} ({disciplina.codigo})")
+
+    @staticmethod
+    def exibir_total_cadastrados():
+        print(f"Total de professores cadastrados: {Professor.total_professores}")
