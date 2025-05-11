@@ -1,3 +1,6 @@
+from persistencia import Persistencia
+
+# Representa uma disciplina que pode ter alunos e um professor
 class Disciplina:
     def __init__(self, codigo, nome, professor_responsavel=None):
         self.codigo = codigo
