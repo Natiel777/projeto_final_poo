@@ -7,6 +7,7 @@ from datetime import date
 
 cadastro = Cadastro()
 
+# Função principal que mostra o menu inicial do sistema
 def menu_principal():
     while True:
         print("\n--- Menu Principal ---")
@@ -34,6 +35,7 @@ def menu_principal():
         else:
             print("Opção inválida. Tente novamente.")
 
+# Menu com opções para gerenciar alunos
 def menu_alunos():
     while True:
         print("\n--- Menu de Alunos ---")
@@ -126,6 +128,7 @@ def menu_alunos():
         else:
             print("Opção inválida.")
 
+# Menu com opções para gerenciar professores
 def menu_professores():
     while True:
         print("\n--- Menu de Professores ---")
@@ -198,6 +201,7 @@ def menu_professores():
         else:
             print("Opção inválida.")
 
+# Menu com opções para gerenciar disciplinas
 def menu_disciplinas():
     while True:
         print("\n--- Menu de Disciplinas ---")
@@ -243,6 +247,7 @@ def menu_disciplinas():
         else:
             print("Opção inválida.")
 
+# Menu que mostra relatórios diversos sobre o sistema
 def menu_relatorios():
     while True:
         print("\n--- Menu de Relatórios ---")
